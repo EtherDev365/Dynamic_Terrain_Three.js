@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		
+				<style>
+			body { margin: 0; }
+			canvas { display: block; }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script src="js/controls/OrbitControls.js"></script>
+		<script type="text/javascript">
+			var scene = new THREE.Scene();// Create the scene and a camera to view it
+
+			/**
+			* Camera
+			**/
+			// Specify the portion of the scene visiable at any time (in degrees)
+			var fieldOfView = 150;
+
+			// Specify the camera's aspect ratio
+			var aspectRatio = window.innerWidth / window.innerHeight;
+			// Specify the near and far clipping planes. Only objects
+			// between those planes will be rendered in the scene
+			// (these values help control the number of items rendered
+			// at any given time)
+			var nearPlane = 0.1;
+			var farPlane = 1000;
+
+			var camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
+
+			/**
+			* Renderer
+			**/
+			var renderer = new THREE.WebGLRenderer();// Create the canvas with a renderer
+			renderer.domElement.id = 'my_canvas';//assign id to canvas element
+			renderer.setSize( window.innerWidth, window.innerHeight );// Specify the size of the canvas
+			document.body.appendChild( renderer.domElement );// Add the canvas to the DOM
+			var controls = new THREE.OrbitControls( camera, renderer.domElement );
+			renderer.autoClearColor = false;			
+
+			/**
+			* Background Image
+			**/
+			// Create a texture loader so we can load our image file
+			var loader = new THREE.TextureLoader();
+			// Load an image file into a custom material
+			var material = new THREE.MeshLambertMaterial({
+			  map: loader.load('./textures/image.jpg')
+			});
+
+			// create a plane geometry for the image with a width of 10
+			// and a height that preserves the image's aspect ratio
+			var geometry = new THREE.PlaneGeometry(window.innerWidth, window.innerWidth*.75);
+
+			// combine our image geometry and material into a mesh
+			var mesh = new THREE.Mesh(geometry, material);
+
+			// set the position of the image mesh in the x,y,z dimensions
+			mesh.position.set(0,0,0);
+			// add the image to the scene
+			scene.add(mesh);
+
+
+			function drawTrail(x, y, w, h)
+			{
+				loader = new THREE.TextureLoader();
+				// Load an image file into a custom material
+				material = new THREE.MeshLambertMaterial({
+				  map: loader.load('./textures/trail.jpg')
+				});
+
+				// create a plane geometry for the image with a width of 10
+				// and a height that preserves the image's aspect ratio
+				geometry = new THREE.PlaneGeometry(w, h);
+
+				// combine our image geometry and material into a mesh
+				mesh = new THREE.Mesh(geometry, material);
+
+				// set the position of the image mesh in the x,y,z dimensions
+				mesh.position.set(x, y, 0);
+				// add the image to the scene
+				scene.add(mesh);
+			}
+
+			/**
+			* Lights
+			**/
+
+			// Add a point light with #fff color, .7 intensity, and 0 distance
+			var light = new THREE.PointLight( 0xffffff, 1, 0 );
+
+			// Specify the light's position
+			light.position.set(1, 1, 1000 );
+
+			// Add the light to the scene
+			scene.add(light)
+
+/*
+// instantiate a loader
+var loader = new THREE.ImageBitmapLoader();
+
+// set options if needed
+loader.setOptions( { imageOrientation: 'flipY' } );
+
+// load a image resource
+loader.load(
+	// resource URL
+	'./textures/image.jpg',
+
+	// onLoad callback
+	function ( imageBitmap ) {
+		var texture = new THREE.CanvasTexture( imageBitmap );
+		var material = new THREE.MeshBasicMaterial( { map: texture } );
+	},
+
+	// onProgress callback currently not supported
+	undefined,
+
+	// onError callback
+	function ( err ) {
+		console.log( 'An error happened' );
+	}
+);*/
+
+
+//var gridHelper = new THREE.GridHelper( 1000, 100 );
+//scene.add( gridHelper );
+
+			/**
+			* Item 1
+			**/
+			// path
+			var curveObj = new THREE.CatmullRomCurve3([
+			  new THREE.Vector3(600, 300, 0),
+			  //new THREE.Vector3(200, -150, 0),
+			  new THREE.Vector3(600, -600, 0),
+			]);
+			curveObj.closed = false;
+			var curveGeom = new THREE.BufferGeometry().setFromPoints(curveObj.getPoints(200));
+			var curveMat = new THREE.LineBasicMaterial({color: 0xffffff, linewidth:555});
+
+			var curve = new THREE.Line(curveGeom, curveMat);
+			//scene.add(curve);
+
+			var clock = new THREE.Clock();
+			var t = 0;
+
+			geometry = new THREE.CubeGeometry(30, 30, 2);
+
+			//var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			var material = new THREE.MeshLambertMaterial({
+			  map: loader.load('./textures/item.jpg')
+			});
+
+			var cube = new THREE.Mesh( geometry, material );
+			cube.position.set(0, 1000, 0);
+
+			scene.add( cube );
+
+
+			/**
+			* Item 2
+			**/
+			// path
+
+			var curveObj2 = new THREE.CatmullRomCurve3([
+			  new THREE.Vector3(-600, 300, 0),
+			  //new THREE.Vector3(200, -150, 0),
+			  new THREE.Vector3(-600, -600, 0),
+			]);
+			curveObj2.closed = false;
+			var curveGeom2 = new THREE.BufferGeometry().setFromPoints(curveObj2.getPoints(200));
+			var curveMat2 = new THREE.LineBasicMaterial({color: 0xffffff, linewidth:555});
+
+			var curve2 = new THREE.Line(curveGeom2, curveMat2);
+			//scene.add(curve2);
+
+			var clock = new THREE.Clock();
+			var t = 0;
+
+			geometry2 = new THREE.CubeGeometry(30, 30, 2);
+
+			//var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			var material2 = new THREE.MeshLambertMaterial({
+			  map: loader.load('./textures/item.jpg')
+			});
+
+			var cube2 = new THREE.Mesh( geometry2, material2 );
+			cube2.position.set(0, 1000, 0);
+
+			scene.add( cube2 );
+
+
+			var particles;
+			var numParticles = 100;
+			var particleGeometry = new THREE.Geometry();
+
+			function createParticleAlongLine(startPoint, endPoint)
+			{
+				console.log(startPoint, endPoint)
+				//next create a set of about 30 animation points along the line
+				var animationPoints = createLinePoints(startPoint, endPoint);
+
+				//add particles to scene
+				for ( i = 0; i < numParticles; i ++ ) {
+				  var desiredIndex = i / numParticles * animationPoints.length;
+				  var rIndex = constrain(Math.floor(desiredIndex),0,animationPoints.length-1);
+				  var particle = new THREE.Vector3();
+				  var particle = animationPoints[rIndex].clone();
+				  particle.moveIndex = rIndex;
+				  particle.nextIndex = rIndex+1;
+				  if(particle.nextIndex >= animationPoints.length )
+				    particle.nextIndex = 0;
+				  particle.lerpN = 0;
+				  particle.path = animationPoints;
+				  particleGeometry.vertices.push( particle );
+				}
+
+				//set particle material
+				var pMaterial = new THREE.PointsMaterial({
+				  color: 0x00FF00,
+				  size: 5,
+				  //map: THREE.ImageUtils.loadTexture(
+				  //  "./textures/trail.jpg"
+				  //),
+				  map: loader.load("./textures/trail.jpg"),
+				  blending: THREE.AdditiveBlending,
+				  transparent: true
+				});
+
+
+				particles = new THREE.Points( particleGeometry, pMaterial );
+				particles.sortParticles = true;
+				particles.dynamic = true;
+				scene.add(particles);
+
+
+				//update function for each particle animation
+				particles.update = function(){
+				  // var time = Date.now()
+				  for( var i in this.geometry.vertices ){
+				    var particle = this.geometry.vertices[i];
+				    var path = particle.path;
+				    particle.lerpN += 0.05;
+				    if(particle.lerpN > 1){
+				      particle.lerpN = 0;
+				      particle.moveIndex = particle.nextIndex;
+				      particle.nextIndex++;
+				      if( particle.nextIndex >= path.length ){
+				        particle.moveIndex = 0;
+				        particle.nextIndex = 1;
+				      }
+				    }
+
+				    var currentPoint = path[particle.moveIndex];
+				    var nextPoint = path[particle.nextIndex];
+
+
+				    particle.copy( currentPoint );
+				    particle.lerp( nextPoint, particle.lerpN );
+				  }
+				  this.geometry.verticesNeedUpdate = true;
+				};
+			}
+			
+
+			function createLinePoints(startPoint, endPoint){
+			  var numPoints = 30;
+			  var returnPoints = [];
+			  for(i=0; i <= numPoints; i ++){
+			    var thisPoint = startPoint.clone().lerp(endPoint, i/numPoints);
+			    returnPoints.push(thisPoint);
+			  }
+			  return returnPoints;
+			}
+
+			function constrain(v, min, max){
+			  if( v < min )
+			    v = min;
+			  else
+			    if( v > max )
+			      v = max;
+			  return v;
+			}
+
+
+
+
+			//camera.position.z = 5;
+			camera.position.set(0, 0, 150);
+			camera.lookAt( 0, 0, 0 );
+			var animate = function () {
+				requestAnimationFrame( animate );
+
+
+				t = clock.getElapsedTime() * 0.1;
+				if (t < 1) {
+					cube.position.copy(curveObj.getPointAt( t % 1));
+					cube.scale.x += 0.003; // SCALE
+					cube.scale.y += 0.003; // SCALE
+					cube.scale.z += 0.003; // SCALE
+
+					cube2.position.copy(curveObj2.getPointAt( t % 1));
+					cube2.scale.x += 0.003; // SCALE
+					cube2.scale.y += 0.003; // SCALE
+					cube2.scale.z += 0.003; // SCALE					
+				}
+				//console.log()
+				drawTrail(cube.position.x, cube.position.y, cube.geometry.parameters.width * cube.scale.x, cube.geometry.parameters.height * cube.scale.y);
+
+
+				drawTrail(cube2.position.x, cube2.position.y, cube2.geometry.parameters.width * cube2.scale.x, cube2.geometry.parameters.height * cube2.scale.y);
+				
+				var pt_start = new THREE.Vector3(-600, 300, 0);
+				var pt_end = new THREE.Vector3(cube2.position.x, cube2.position.y, 0);
+				createParticleAlongLine(pt_start, pt_end)
+
+				if(particles != undefined)
+				{
+					particles.update();
+				}
+				
+				//cube.position.x += 0.01;
+				//cube.position.y += 0.1;
+				//cube.translateY(-10);
+				renderer.render( scene, camera );
+				controls.update();//enale orbit control
+			};
+
+			animate();
+
+		</script>
+	</body>
+</html>
